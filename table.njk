@@ -1,1 +1,15 @@
-<div>Howdy! {{config.text | safe}}</div>
+<div class="workout_count">
+	{% if peloton_user.workout_counts %}
+		<table class="small">
+			<tbody>
+				{% for workout_count in peloton_user.workout_counts %}
+					<tr class="normal">
+						<td class="icon"><img class="bright" src="{{ workout_count.icon_url }}" /></td>
+						<td class="title align-left">{{ workout_count.name }}</td>
+						<td class="count align-right">{{ workout_count.count }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	{% endif %}
+</div>

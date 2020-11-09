@@ -1,0 +1,12 @@
+.MMM-Peloton .workout_count img {
+	height: 32px;
+	width: 32px;
+}
+
+.MMM-Peloton .workout_count table .icon {
+	padding-right: 10px;
+}
+
+.MMM-Peloton .workout_count table .count {
+	padding-left: 10px;
+}
