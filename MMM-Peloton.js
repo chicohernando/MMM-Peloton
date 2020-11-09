@@ -6,11 +6,9 @@ Module.register("MMM-Peloton", {
 		password: "",
 
 		//workout count summary configuration
-		workout_count_configuration: {
-			sort_order: "count",
-			categories_to_display: ["stretching", "running"],
-			should_display_categories_with_zero_count: false
-		},
+		workout_count_categories_to_omit: [], //current values to omit are cardio, circuit, cycling, meditation, running, strength, walking, yoga
+		workout_count_should_display_categories_with_zero_count: true,
+		workout_count_sort_order: "count_asc", //supported values are: alpha_asc, alpha_desc, count_asc, count_desc
 
 		//development
 		debug: false
@@ -71,6 +69,7 @@ Module.register("MMM-Peloton", {
 	},
 
 	getWorkoutCounts: function() {
+		var self = this;
 		this.debug("Transforming workout counts");
 		var workout_counts_to_return = [];
 
@@ -82,11 +81,16 @@ Module.register("MMM-Peloton", {
 		}
 
 		//start by keeping workout_counts where the count is greater zero
-		if (!this.config.workout_count_configuration.should_display_categories_with_zero_count) {
-			workout_counts_to_return = this.peloton_user.workout_counts.filter(function (workout_count) {
+		if (!this.config.workout_count_should_display_categories_with_zero_count) {
+			workout_counts_to_return = workout_counts_to_return.filter(function (workout_count) {
 				return workout_count.count > 0;
 			});
 		}
+
+		//filter workouts to only the ones that user has defined
+		workout_counts_to_return = workout_counts_to_return.filter(function(workout_count) {
+			return !self.config.workout_count_categories_to_omit.includes(workout_count.slug);
+		});
 
 		return workout_counts_to_return;
 	}
