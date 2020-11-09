@@ -8,7 +8,8 @@ Module.register("MMM-Peloton", {
 		//workout count summary configuration
 		workout_count_configuration: {
 			sort_order: "count",
-			display: ["stretching", "running"]
+			categories_to_display: ["stretching", "running"],
+			should_display_categories_with_zero_count: false
 		},
 
 		//development
@@ -40,6 +41,7 @@ Module.register("MMM-Peloton", {
 
 		data.config = this.config;
 		data.peloton_user = this.peloton_user;
+		data.workout_counts = this.getWorkoutCounts();
 
 		return data;
 	},
@@ -66,5 +68,26 @@ Module.register("MMM-Peloton", {
 		if (this.config.debug) {
 			Log.log("[" + this.name + "] " + stringToLog);
 		}
+	},
+
+	getWorkoutCounts: function() {
+		this.debug("Transforming workout counts");
+		var workout_counts_to_return = [];
+
+		//if a peloton_user hasn't been set then we can return an empty array
+		if (!this.peloton_user) {
+			return workout_counts_to_return;
+		} else {
+			workout_counts_to_return = this.peloton_user.workout_counts;
+		}
+
+		//start by keeping workout_counts where the count is greater zero
+		if (!this.config.workout_count_configuration.should_display_categories_with_zero_count) {
+			workout_counts_to_return = this.peloton_user.workout_counts.filter(function (workout_count) {
+				return workout_count.count > 0;
+			});
+		}
+
+		return workout_counts_to_return;
 	}
 });
