@@ -4,7 +4,7 @@ const Log = require("../../js/logger");
 
 module.exports = NodeHelper.create({
 	start: function () {
-		console.log("Starting node helper for: " + this.name);
+		Log.log("Starting node helper for: " + this.name);
 		this.config = null;
 		this.instance = null;
 
