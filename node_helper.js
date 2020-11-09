@@ -94,7 +94,6 @@ module.exports = NodeHelper.create({
 			} else if (response.statusCode === 200) {
 				self.debug("Successfully retrieved user data");
 				self.peloton_user = body;
-				self.debug(JSON.stringify(body, null, 2));
 				self.sendSocketNotification("RETRIEVED_USER_DATA", self.peloton_user);
 			} else {
 				self.debug("Failed to authenticate");
