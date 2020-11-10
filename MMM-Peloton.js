@@ -8,7 +8,7 @@ Module.register("MMM-Peloton", {
 		//workout count summary configuration
 		workout_count_categories_to_omit: [], //current values to omit are cardio, circuit, cycling, meditation, running, strength, walking, yoga
 		workout_count_should_display_categories_with_zero_count: true,
-		workout_count_sort_order: "count_asc", //supported values are: alpha_asc, alpha_desc, count_asc, count_desc
+		workout_count_sort_order: "alpha_asc", //supported values are: alpha_asc, alpha_desc, count_asc, count_desc
 
 		//development
 		debug: false
@@ -87,10 +87,39 @@ Module.register("MMM-Peloton", {
 			});
 		}
 
-		//filter workouts to only the ones that user has defined
+		//remove workouts that users don't want to see
 		workout_counts_to_return = workout_counts_to_return.filter(function(workout_count) {
 			return !self.config.workout_count_categories_to_omit.includes(workout_count.slug);
 		});
+
+		//sort workouts based on configuration
+		switch (self.config.workout_count_sort_order) {
+			case "alpha_asc":
+				workout_counts_to_return.sort(function(left, right) {
+					return left.name == right.name ? 0 : left.name > right.name ? 1 : -1;
+				});
+				break;
+			case "alpha_desc":
+				workout_counts_to_return.sort(function(left, right) {
+					return left.name == right.name ? 0 : left.name < right.name ? 1 : -1;
+				});
+				break;
+			case "count_asc":
+				workout_counts_to_return.sort(function(left, right) {
+					return left.count == right.count ? 0 : left.count > right.count ? 1 : -1;
+				});
+				break;
+			case "count_desc":
+				workout_counts_to_return.sort(function(left, right) {
+					return left.count == right.count ? 0 : left.count < right.count ? 1 : -1;
+				});
+				break;
+			default:
+				this.debug("Invalid workout_count_sort_order.  Applying default sort order.");
+				workout_counts_to_return.sort(function(left, right) {
+					return left.name == right.name ? 0 : left.name > right.name ? 1 : -1;
+				});
+		}
 
 		return workout_counts_to_return;
 	}
