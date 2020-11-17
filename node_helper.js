@@ -128,7 +128,6 @@ module.exports = NodeHelper.create({
 				self.sendSocketNotification("FAILED_TO_RETRIEVE_RECENT_USER_WORKOUT_DATA");
 			} else if (response.statusCode === 200) {
 				self.debug("Successfully retrieved user workout data");
-				self.debug(JSON.stringify(body, null, 2));
 				self.sendSocketNotification("RETRIEVED_RECENT_WORKOUT_DATA", body);
 			} else {
 				self.debug("Failed to receive data from /api/user/" + this.peloton_user_id + "/workouts");
