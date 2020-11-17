@@ -10,6 +10,8 @@ Module.register("MMM-Peloton", {
 		workout_count_should_display_categories_with_zero_count: true,
 		workout_count_sort_order: "alpha_asc", //supported values are: alpha_asc, alpha_desc, count_asc, count_desc
 
+		recent_workouts_limit: 10, //number in the range of [1, 10]
+
 		//development
 		debug: false
 	},
@@ -17,6 +19,11 @@ Module.register("MMM-Peloton", {
 	start: function () {
 		this.peloton_user = null;
 		this.debug("MMM-Peloton: Inside start function");
+		
+		if (this.config.recent_workouts_limit < 1 || this.config.recent_workouts_limit > 10) {
+			this.config.recent_workouts_limit = 5;
+		}
+
 		this.sendSocketNotification(this.normalizeNotification("SET_CONFIG"), this.config);
 		this.sendSocketNotification(this.normalizeNotification("LOGIN"));
     },
