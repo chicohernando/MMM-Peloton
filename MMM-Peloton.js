@@ -24,6 +24,7 @@ Module.register("MMM-Peloton", {
 			this.config.recent_workouts_limit = 5;
 		}
 
+		this.addTemplateFilters();
 		this.sendSocketNotification(this.normalizeNotification("SET_CONFIG"), this.config);
 		this.sendSocketNotification(this.normalizeNotification("LOGIN"));
     },
@@ -55,6 +56,11 @@ Module.register("MMM-Peloton", {
 		}
 		return recent_workouts;
 	},
+
+	getScripts: function () {
+		return ["moment.js"];
+	},
+
     getTemplate: function () {
     	return "table.njk";
 	},
@@ -153,5 +159,32 @@ Module.register("MMM-Peloton", {
 		}
 
 		return workout_counts_to_return;
+	},
+
+	addTemplateFilters: function() {
+		this.nunjucksEnvironment().addFilter(
+			"timeSinceNow",
+			function (date) {
+				date = moment(date);
+
+				return date.fromNow();
+			}.bind(this)
+		);
+
+		this.nunjucksEnvironment().addFilter(
+			"moment",
+			function (date) {
+				date = moment(date);
+
+				return date;
+			}.bind(this)
+		);
+
+		this.nunjucksEnvironment().addFilter(
+			"format",
+			function (moment, format) {
+				return moment.format(format);
+			}.bind(this)
+		);
 	}
 });
