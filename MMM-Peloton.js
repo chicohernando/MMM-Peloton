@@ -10,7 +10,7 @@ Module.register("MMM-Peloton", {
 		workout_count_should_display_categories_with_zero_count: true,
 		workout_count_sort_order: "alpha_asc", //supported values are: alpha_asc, alpha_desc, count_asc, count_desc
 
-		recent_workouts_limit: 10, //number in the range of [1, 10]
+		recent_workouts_limit: 5, //number in the range of [1, 10]
 
 		//development
 		debug: false
