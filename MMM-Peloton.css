@@ -1,4 +1,5 @@
-.MMM-Peloton .workout_count img {
+.MMM-Peloton .workout_count img,
+.MMM-Peloton .recent_workouts img {
 	height: 32px;
 	width: 32px;
 }
@@ -9,4 +10,16 @@
 
 .MMM-Peloton .workout_count table .count {
 	padding-left: 10px;
+}
+
+.MMM-Peloton .recent_workouts table .icon {
+	padding-right: 10px;
+}
+
+.MMM-Peloton .recent_workouts table .count {
+	padding-left: 15px;
+}
+
+.MMM-Peloton .recent_workouts table .time_since {
+	font-size: 0.8em;
 }

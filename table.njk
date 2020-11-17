@@ -1,5 +1,5 @@
-<div class="workout_count">
-	{% if workout_counts %}
+{% if workout_counts %}
+	<div class="workout_count">
 		<table class="small">
 			<tbody>
 				{% for workout_count in workout_counts %}
@@ -11,5 +11,20 @@
 				{% endfor %}
 			</tbody>
 		</table>
-	{% endif %}
-</div>
+	</div>
+{% endif %}
+
+{% if recent_workouts %}
+	<div class="recent_workouts">
+		<table class="small">
+			<tbody>
+				{% for recent_workout in recent_workouts %}
+					<tr class="normal">
+						<td class="title align-left">{{ recent_workout.ride.title }}</td>
+						<td class="count align-right">{{ (recent_workout.start_time * 1000)|moment|format("ddd MMM Do") }} <span class="time_since">({{ (recent_workout.start_time * 1000)|timeSinceNow }})</span></td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endif %}
