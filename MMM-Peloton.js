@@ -32,10 +32,10 @@ Module.register("MMM-Peloton", {
     	return ["font-awesome.css", "MMM-Peloton.css"];
     },
 
-    getUserData: function() {
-    	this.debug("Requesting user data");
-    	this.sendSocketNotification(this.normalizeNotification("REQUEST_USER"));
-    },
+	requestUserData: function() {
+		this.debug("Requesting user data");
+		this.sendSocketNotification(this.normalizeNotification("REQUEST_USER"));
+	},
 
     getTemplate: function () {
     	return "table.njk";
@@ -59,7 +59,7 @@ Module.register("MMM-Peloton", {
 		this.debug('got a notification back!!!!!');
 		if (notification === "USER_IS_LOGGED_IN") {
 			this.debug("Front end knows that user is logged in");
-			this.getUserData();
+			this.requestUserData();
 		} else if (notification === "FAILED_TO_LOG_IN") {
 			this.debug("Front end knows that user was not able to log in");
 		} else if (notification === "RETRIEVED_USER_DATA") {
