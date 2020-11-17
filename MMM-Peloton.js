@@ -37,6 +37,24 @@ Module.register("MMM-Peloton", {
 		this.sendSocketNotification(this.normalizeNotification("REQUEST_USER"));
 	},
 
+	requestRecentWorkouts: function() {
+		this.debug("Requesting recent workout data");
+		this.sendSocketNotification(this.normalizeNotification("REQUEST_RECENT_WORKOUTS"));
+	},
+
+	getRecentWorkouts: function() {
+		this.debug("Transforming recent workouts");
+		var recent_workouts = [];
+
+		if (this.peloton_recent_workouts) {
+			//copy the recent workouts
+			recent_workouts = this.peloton_recent_workouts.data;
+
+			//limit the number of recent workouts to first five
+			recent_workouts = recent_workouts.slice(0, this.config.recent_workouts_limit);
+		}
+		return recent_workouts;
+	},
     getTemplate: function () {
     	return "table.njk";
 	},
@@ -47,6 +65,7 @@ Module.register("MMM-Peloton", {
 		data.config = this.config;
 		data.peloton_user = this.peloton_user;
 		data.workout_counts = this.getWorkoutCounts();
+		data.recent_workouts = this.getRecentWorkouts();
 
 		return data;
 	},
@@ -60,11 +79,16 @@ Module.register("MMM-Peloton", {
 		if (notification === "USER_IS_LOGGED_IN") {
 			this.debug("Front end knows that user is logged in");
 			this.requestUserData();
+			this.requestRecentWorkouts();
 		} else if (notification === "FAILED_TO_LOG_IN") {
 			this.debug("Front end knows that user was not able to log in");
 		} else if (notification === "RETRIEVED_USER_DATA") {
 			this.debug("Front end knows that user data was retrieved");
 			this.peloton_user = payload;
+			this.updateDom();
+		} else if (notification === "RETRIEVED_RECENT_WORKOUT_DATA") {
+			this.debug("Front end retrieved recent workout data");
+			this.peloton_recent_workouts = payload;
 			this.updateDom();
 		}
 	},
