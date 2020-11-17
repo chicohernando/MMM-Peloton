@@ -33,6 +33,8 @@ module.exports = NodeHelper.create({
 			this.login();
 		} else if (notification === this.normalizeNotification("REQUEST_USER")) {
 			this.getUserData();
+		} else if (notification === this.normalizeNotification("REQUEST_RECENT_WORKOUTS")) {
+			this.getRecentWorkouts();
 		}
 	},
 
@@ -96,8 +98,41 @@ module.exports = NodeHelper.create({
 				self.peloton_user = body;
 				self.sendSocketNotification("RETRIEVED_USER_DATA", self.peloton_user);
 			} else {
-				self.debug("Failed to authenticate");
+				self.debug("Failed to receive data from api/me");
 				self.sendSocketNotification("FAILED_TO_RETRIEVE_USER_DATA", body);
+			}
+		});
+	},
+
+	getRecentWorkouts: function() {
+		var self = this;
+		this.debug("About to fetch /api/user/" + this.peloton_user_id + "/workouts");
+		
+		request({
+			headers: {
+				Cookie: "peloton_session_id=" + this.peloton_session_id + ";",
+				"peloton-platform": "web"
+			},
+			url: this.peloton_api_url + "api/user/" + this.peloton_user_id + "/workouts",
+			json: true,
+			qs: {
+				joins: "ride,ride.instructor",
+				limit: this.config.recent_workouts_limit,
+				sort_by: "-created",
+				page: 0
+			}
+		}, function(error, response, body) {
+			self.debug("Received response for /api/user/" + this.peloton_user_id + "/workouts request");
+			if (error) {
+				self.debug(error);
+				self.sendSocketNotification("FAILED_TO_RETRIEVE_RECENT_USER_WORKOUT_DATA");
+			} else if (response.statusCode === 200) {
+				self.debug("Successfully retrieved user workout data");
+				self.debug(JSON.stringify(body, null, 2));
+				self.sendSocketNotification("RETRIEVED_RECENT_WORKOUT_DATA", body);
+			} else {
+				self.debug("Failed to receive data from /api/user/" + this.peloton_user_id + "/workouts");
+				self.sendSocketNotification("FAILED_TO_RETRIEVE_RECENT_USER_WORKOUT_DATA", body);
 			}
 		});
 	}
