@@ -54,6 +54,7 @@ Module.register("MMM-Peloton", {
 			//limit the number of recent workouts to first five
 			recent_workouts = recent_workouts.slice(0, this.config.recent_workouts_limit);
 		}
+		
 		return recent_workouts;
 	},
 
@@ -81,7 +82,6 @@ Module.register("MMM-Peloton", {
 	},
 
 	socketNotificationReceived: function (notification, payload) {
-		this.debug('got a notification back!!!!!');
 		if (notification === "USER_IS_LOGGED_IN") {
 			this.debug("Front end knows that user is logged in");
 			this.requestUserData();
