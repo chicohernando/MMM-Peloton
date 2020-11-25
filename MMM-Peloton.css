@@ -9,6 +9,7 @@
 }
 
 .MMM-Peloton .workout_count table .count {
+	font-weight: 200;
 	padding-left: 10px;
 }
 
@@ -17,9 +18,11 @@
 }
 
 .MMM-Peloton .recent_workouts table .count {
+	font-weight: 200;
 	padding-left: 15px;
 }
 
 .MMM-Peloton .recent_workouts table .time_since {
 	font-size: 0.8em;
+	font-weight: 300;
 }
