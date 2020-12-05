@@ -57,7 +57,7 @@ Module.register("MMM-Peloton", {
 
 	getRecentWorkouts: function() {
 		this.debug("Transforming recent workouts");
-		
+
 		let recent_workouts = [];
 
 		if (this.peloton_recent_workouts) {
@@ -76,7 +76,21 @@ Module.register("MMM-Peloton", {
 	},
 
     getTemplate: function () {
-    	return "table.njk";
+		let template_name = null;
+
+		switch (this.config.display_type) {
+			case "workout_count":
+				template_name = "workout_count.njk";
+				break;
+			case "recent_workouts":
+				template_name = "recent_workouts.njk";
+				break;
+			default:
+				template_name = "undefined_display_type.njk";
+				break;
+		}
+
+		return template_name;
 	},
 
 	getTemplateData: function () {
