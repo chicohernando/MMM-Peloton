@@ -1,6 +1,9 @@
 // const Log = require("../../js/logger");
 Module.register("MMM-Peloton", {
 	defaults: {
+		//timers
+		refresh_every: 300,                                            //number of seconds between data refreshes
+
 		//authentication
 		username: "",
 		password: "",
@@ -113,15 +116,28 @@ Module.register("MMM-Peloton", {
 		return this.name + "_" + notification;
 	},
 
+	refreshData: function() {
+		//get new user data every time
+		this.requestUserData();
+
+		//refresh data based on what we are displaying
+		if (this.config.display_type == "recent_workouts") {
+			this.requestRecentWorkouts();
+		}
+	},
+
 	socketNotificationReceived: function (notification, payload) {
+		let self = this;
 		if (payload.instance_identifier == this.identifier) {
 			if (notification === "USER_IS_LOGGED_IN") {
 				this.debug("Front end knows that user is logged in");
-				this.requestUserData();
-				
-				if (this.config.display_type == "recent_workouts") {
-					this.requestRecentWorkouts();
-				}
+
+				this.refreshData();
+
+				//set up timer to refresh data
+				setInterval(function () {
+					self.refreshData();
+				}, this.config.refresh_every * 1000);
 			} else if (notification === "FAILED_TO_LOG_IN") {
 				this.debug("Front end knows that user was not able to log in");
 			} else if (notification === "RETRIEVED_USER_DATA") {
