@@ -80,10 +80,8 @@ Module.register("MMM-Peloton", {
 
 		switch (this.config.display_type) {
 			case "workout_count":
-				template_name = "workout_count.njk";
-				break;
 			case "recent_workouts":
-				template_name = "recent_workouts.njk";
+				template_name = this.config.display_type + ".njk";
 				break;
 			default:
 				template_name = "undefined_display_type.njk";
