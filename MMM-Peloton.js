@@ -5,28 +5,34 @@ Module.register("MMM-Peloton", {
 		username: "",
 		password: "",
 
-		//workout count summary configuration
-		workout_count_categories_to_omit: [], //current values to omit are cardio, circuit, cycling, meditation, running, strength, walking, yoga
-		workout_count_should_display_categories_with_zero_count: true,
-		workout_count_sort_order: "alpha_asc", //supported values are: alpha_asc, alpha_desc, count_asc, count_desc
+		display_type: "workout_count",                                 //supported values are: workout_count and recent_workouts
 
-		recent_workouts_limit: 5, //number in the range of [1, 10]
+		//workout count summary configuration
+		workout_count_categories_to_omit: [],                          //supported values to omit are: cardio, circuit, cycling, meditation, running, strength, walking, yoga
+		workout_count_should_display_categories_with_zero_count: true, //true or false
+		workout_count_sort_order: "alpha_asc",                         //supported values are: alpha_asc, alpha_desc, count_asc, count_desc
+
+		recent_workouts_limit: 5,                                      //number in the range of [1, 10]
 
 		//development
-		debug: false
+		debug: false                                                   //true or false
 	},
 
 	start: function () {
 		this.peloton_user = null;
-		this.debug("MMM-Peloton: Inside start function");
 		
 		if (this.config.recent_workouts_limit < 1 || this.config.recent_workouts_limit > 10) {
 			this.config.recent_workouts_limit = 5;
 		}
 
 		this.addTemplateFilters();
-		this.sendSocketNotification(this.normalizeNotification("SET_CONFIG"), this.config);
-		this.sendSocketNotification(this.normalizeNotification("LOGIN"));
+		this.sendSocketNotification(this.normalizeNotification("SET_CONFIG"), {
+			instance_identifier: this.identifier,
+			config: this.config
+		});
+		this.sendSocketNotification(this.normalizeNotification("LOGIN"), {
+			instance_identifier: this.identifier
+		});
     },
 
     getStyles: function() {
@@ -35,17 +41,24 @@ Module.register("MMM-Peloton", {
 
 	requestUserData: function() {
 		this.debug("Requesting user data");
-		this.sendSocketNotification(this.normalizeNotification("REQUEST_USER"));
+
+		this.sendSocketNotification(this.normalizeNotification("REQUEST_USER"), {
+			instance_identifier: this.identifier
+		});
 	},
 
 	requestRecentWorkouts: function() {
 		this.debug("Requesting recent workout data");
-		this.sendSocketNotification(this.normalizeNotification("REQUEST_RECENT_WORKOUTS"));
+
+		this.sendSocketNotification(this.normalizeNotification("REQUEST_RECENT_WORKOUTS"), {
+			instance_identifier: this.identifier
+		});
 	},
 
 	getRecentWorkouts: function() {
 		this.debug("Transforming recent workouts");
-		var recent_workouts = [];
+		
+		let recent_workouts = [];
 
 		if (this.peloton_recent_workouts) {
 			//copy the recent workouts
@@ -54,7 +67,7 @@ Module.register("MMM-Peloton", {
 			//limit the number of recent workouts to first five
 			recent_workouts = recent_workouts.slice(0, this.config.recent_workouts_limit);
 		}
-		
+
 		return recent_workouts;
 	},
 
@@ -67,13 +80,20 @@ Module.register("MMM-Peloton", {
 	},
 
 	getTemplateData: function () {
-		var data = {};
+		let data = {};
 
 		data.config = this.config;
 		data.peloton_user = this.peloton_user;
-		data.workout_counts = this.getWorkoutCounts();
-		data.recent_workouts = this.getRecentWorkouts();
 
+		switch (this.config.display_type) {
+			case "workout_count":
+				data.workout_counts = this.getWorkoutCounts();
+				break;
+			case "recent_workouts":
+				data.recent_workouts = this.getRecentWorkouts();
+				break;
+		}
+		
 		return data;
 	},
 
@@ -82,20 +102,25 @@ Module.register("MMM-Peloton", {
 	},
 
 	socketNotificationReceived: function (notification, payload) {
-		if (notification === "USER_IS_LOGGED_IN") {
-			this.debug("Front end knows that user is logged in");
-			this.requestUserData();
-			this.requestRecentWorkouts();
-		} else if (notification === "FAILED_TO_LOG_IN") {
-			this.debug("Front end knows that user was not able to log in");
-		} else if (notification === "RETRIEVED_USER_DATA") {
-			this.debug("Front end knows that user data was retrieved");
-			this.peloton_user = payload;
-			this.updateDom();
-		} else if (notification === "RETRIEVED_RECENT_WORKOUT_DATA") {
-			this.debug("Front end retrieved recent workout data");
-			this.peloton_recent_workouts = payload;
-			this.updateDom();
+		if (payload.instance_identifier == this.identifier) {
+			if (notification === "USER_IS_LOGGED_IN") {
+				this.debug("Front end knows that user is logged in");
+				this.requestUserData();
+				
+				if (this.config.display_type == "recent_workouts") {
+					this.requestRecentWorkouts();
+				}
+			} else if (notification === "FAILED_TO_LOG_IN") {
+				this.debug("Front end knows that user was not able to log in");
+			} else if (notification === "RETRIEVED_USER_DATA") {
+				this.debug("Front end knows that user data was retrieved");
+				this.peloton_user = payload.peloton_user;
+				this.updateDom();
+			} else if (notification === "RETRIEVED_RECENT_WORKOUT_DATA") {
+				this.debug("Front end retrieved recent workout data");
+				this.peloton_recent_workouts = payload.body;
+				this.updateDom();
+			}
 		}
 	},
 
@@ -106,9 +131,10 @@ Module.register("MMM-Peloton", {
 	},
 
 	getWorkoutCounts: function() {
-		var self = this;
 		this.debug("Transforming workout counts");
-		var workout_counts_to_return = [];
+
+		let self = this;
+		let workout_counts_to_return = [];
 
 		//if a peloton_user hasn't been set then we can return an empty array
 		if (!this.peloton_user) {
