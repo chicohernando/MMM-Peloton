@@ -48,14 +48,19 @@ module.exports = NodeHelper.create({
 	socketNotificationReceived: function(notification, payload) {
 		this.debug("Received socket notification: " + notification);
 
-		if (notification === this.normalizeNotification("SET_CONFIG")) {
-			this.createInstance(payload.instance_identifier, payload.config);
-		} else if (notification === this.normalizeNotification("LOGIN")) {
-			this.login(payload.instance_identifier);
-		} else if (notification === this.normalizeNotification("REQUEST_USER")) {
-			this.getUserData(payload.instance_identifier);
-		} else if (notification === this.normalizeNotification("REQUEST_RECENT_WORKOUTS")) {
-			this.getRecentWorkouts(payload.instance_identifier);
+		switch (notification) {
+			case this.normalizeNotification("SET_CONFIG"):
+				this.createInstance(payload.instance_identifier, payload.config);
+				break;
+			case this.normalizeNotification("LOGIN"):
+				this.login(payload.instance_identifier);
+				break;
+			case this.normalizeNotification("REQUEST_USER"):
+				this.getUserData(payload.instance_identifier);
+				break;
+			case this.normalizeNotification("REQUEST_RECENT_WORKOUTS"):
+				this.getRecentWorkouts(payload.instance_identifier);
+				break;
 		}
 	},
 
@@ -67,7 +72,7 @@ module.exports = NodeHelper.create({
 		
 		if (instance.peloton_session_id) {
 			this.debug("Already logged in", instance_identifier);
-			
+
 			this.sendSocketNotification("USER_IS_LOGGED_IN", {
 				instance_identifier: instance_identifier
 			});
