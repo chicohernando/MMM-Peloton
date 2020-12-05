@@ -23,6 +23,7 @@ Module.register("MMM-Peloton", {
 
 	start: function () {
 		this.peloton_user = null;
+		this.sign_in_error = false;
 		
 		if (this.config.recent_workouts_limit < 1 || this.config.recent_workouts_limit > 10) {
 			this.config.recent_workouts_limit = 5;
@@ -99,6 +100,7 @@ Module.register("MMM-Peloton", {
 
 		data.config = this.config;
 		data.peloton_user = this.peloton_user;
+		data.sign_in_error = this.sign_in_error;
 
 		switch (this.config.display_type) {
 			case "workout_count":
@@ -126,6 +128,10 @@ Module.register("MMM-Peloton", {
 		}
 	},
 
+	setSignInError: function(sign_in_error) {
+		this.sign_in_error = !!sign_in_error;
+	},
+
 	socketNotificationReceived: function (notification, payload) {
 		let self = this;
 		if (payload.instance_identifier == this.identifier) {
@@ -140,6 +146,9 @@ Module.register("MMM-Peloton", {
 				}, this.config.refresh_every * 1000);
 			} else if (notification === "FAILED_TO_LOG_IN") {
 				this.debug("Front end knows that user was not able to log in");
+
+				this.setSignInError(true);
+				this.updateDom();
 			} else if (notification === "RETRIEVED_USER_DATA") {
 				this.debug("Front end knows that user data was retrieved");
 				this.peloton_user = payload.peloton_user;

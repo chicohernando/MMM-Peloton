@@ -1,4 +1,6 @@
-{% if recent_workouts %}
+{% if sign_in_error %}
+	Failed to login
+{% elseif recent_workouts and recent_workouts|length %}
 	<div class="recent_workouts">
 		<table class="small">
 			<tbody>
@@ -11,4 +13,6 @@
 			</tbody>
 		</table>
 	</div>
+{% else %}
+	Loading...
 {% endif %}
