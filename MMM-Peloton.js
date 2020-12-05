@@ -163,7 +163,7 @@ Module.register("MMM-Peloton", {
 
 	debug: function(stringToLog) {
 		if (this.config.debug) {
-			Log.log("[" + this.name + "] " + stringToLog);
+			Log.log("[" + this.name + ":" + this.identifier + "] " + stringToLog);
 		}
 	},
 

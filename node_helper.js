@@ -35,9 +35,16 @@ module.exports = NodeHelper.create({
 
 	debug: function(stringToLog, instance_identifier = null) {
 		let should_log = instance_identifier === null || this.getConfiguration(instance_identifier).debug === true;
-		
+		let prefix = "";
+
 		if (should_log) {
-			Log.log("[" + this.name + "] " + stringToLog);
+			if (instance_identifier) {
+				prefix = "[" + this.name + ":" + instance_identifier + "] ";
+			} else {
+				prefix = "[" + this.name + "] ";
+			}
+
+			Log.log(prefix + stringToLog);
 		}
 	},
 
