@@ -309,16 +309,30 @@ Module.register("MMM-Peloton", {
 				this.updateDom();
 			} else if (notification === "RETRIEVED_CHALLENGE_DATA") {
 				this.debug("Front end retrieved challenge data");
-				
+
 				this.peloton_challenges = payload.body;
 				this.updateDom();
 			}
 		}
 	},
 
-	debug: function(stringToLog) {
+	/**
+	 * Wrapper for Log.log function.  This will use Log.log if the debug
+	 * confirguration is true.  This will prefix the name of the module
+	 * and the instance identifier to the string_to_log.
+	 *
+	 * This expects string_to_log to be a string.  If you have an object
+	 * that you want to log you should try something like:
+	 *
+	 *     this.debug(JSON.stringify(object, null, 2));
+	 *
+	 * @param string string_to_log
+	 *
+	 * @return void
+	 */
+	debug: function(string_to_log) {
 		if (this.config.debug) {
-			Log.log("[" + this.name + ":" + this.identifier + "] " + stringToLog);
+			Log.log("[" + this.name + ":" + this.identifier + "] " + string_to_log);
 		}
 	},
 
