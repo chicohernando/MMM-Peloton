@@ -26,3 +26,16 @@
 	font-size: 0.8em;
 	font-weight: 300;
 }
+
+.MMM-Peloton .challenges table * {
+	vertical-align: top;
+}
+
+.MMM-Peloton .challenges table .title,
+.MMM-Peloton .challenges table .current_tier {
+	padding-right: 10px;
+}
+
+.MMM-Peloton .challenges table .summary {
+	font-size: 0.6em;
+}

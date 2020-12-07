@@ -8,7 +8,7 @@ Module.register("MMM-Peloton", {
 		username: "",
 		password: "",
 
-		display_type: "workout_count",                                 //supported values are: workout_count and recent_workouts
+		display_type: "workout_count",                                 //supported values are: workout_count, recent_workouts, and challenges
 
 		//workout count summary configuration
 		workout_count_categories_to_omit: [],                          //supported values to omit are: cardio, circuit, cycling, meditation, running, strength, walking, yoga
@@ -24,6 +24,7 @@ Module.register("MMM-Peloton", {
 	start: function () {
 		this.peloton_user = null;
 		this.sign_in_error = false;
+		this.peloton_challenges = null;
 		
 		if (this.config.recent_workouts_limit < 1 || this.config.recent_workouts_limit > 10) {
 			this.config.recent_workouts_limit = 5;
@@ -59,6 +60,14 @@ Module.register("MMM-Peloton", {
 		});
 	},
 
+	requestChallenges: function() {
+		this.debug("Requesting challenges");
+
+		this.sendSocketNotification(this.normalizeNotification("REQUEST_CHALLENGES"), {
+			instance_identifier: this.identifier
+		});
+	},
+
 	getRecentWorkouts: function() {
 		this.debug("Transforming recent workouts");
 
@@ -75,6 +84,18 @@ Module.register("MMM-Peloton", {
 		return recent_workouts;
 	},
 
+	getChallenges: function() {
+		this.debug("Transforming challenges");
+
+		let challenges = [];
+
+		if (this.peloton_challenges) {
+			challenges = this.peloton_challenges.challenges;
+		}
+
+		return challenges;
+	},
+
 	getScripts: function () {
 		return ["moment.js"];
 	},
@@ -85,6 +106,7 @@ Module.register("MMM-Peloton", {
 		switch (this.config.display_type) {
 			case "workout_count":
 			case "recent_workouts":
+			case "challenges":
 				template_name = this.config.display_type + ".njk";
 				break;
 			default:
@@ -109,6 +131,9 @@ Module.register("MMM-Peloton", {
 			case "recent_workouts":
 				data.recent_workouts = this.getRecentWorkouts();
 				break;
+			case "challenges":
+				data.challenges = this.getChallenges();
+				break;
 		}
 		
 		return data;
@@ -123,8 +148,13 @@ Module.register("MMM-Peloton", {
 		this.requestUserData();
 
 		//refresh data based on what we are displaying
-		if (this.config.display_type == "recent_workouts") {
-			this.requestRecentWorkouts();
+		switch(this.config.display_type) {
+			case "recent_workouts":
+				this.requestRecentWorkouts();
+				break;
+			case "challenges":
+				this.requestChallenges();
+				break;
 		}
 	},
 
@@ -156,6 +186,10 @@ Module.register("MMM-Peloton", {
 			} else if (notification === "RETRIEVED_RECENT_WORKOUT_DATA") {
 				this.debug("Front end retrieved recent workout data");
 				this.peloton_recent_workouts = payload.body;
+				this.updateDom();
+			} else if (notification === "RETRIEVED_CHALLENGE_DATA") {
+				this.debug("Front end retrieved challenge data");
+				this.peloton_challenges = payload.body;
 				this.updateDom();
 			}
 		}

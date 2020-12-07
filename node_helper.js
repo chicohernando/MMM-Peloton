@@ -68,6 +68,9 @@ module.exports = NodeHelper.create({
 			case this.normalizeNotification("REQUEST_RECENT_WORKOUTS"):
 				this.getRecentWorkouts(payload.instance_identifier);
 				break;
+			case this.normalizeNotification("REQUEST_CHALLENGES"):
+				this.getChallenges(payload.instance_identifier);
+				break;
 		}
 	},
 
@@ -207,6 +210,48 @@ module.exports = NodeHelper.create({
 				self.debug("Failed to receive data from /api/user/" + instance.peloton_user_id + "/workouts", instance_identifier);
 
 				self.sendSocketNotification("FAILED_TO_RETRIEVE_RECENT_USER_WORKOUT_DATA", {
+					instance_identifier: instance_identifier,
+					body: body
+				});
+			}
+		});
+	},
+
+	getChallenges: function(instance_identifier) {
+		let self = this;
+		let instance = this.getInstance(instance_identifier);
+		this.debug("About to fetch /api/user/" + instance.peloton_user_id + "/challenges/current", instance_identifier);
+		
+		request({
+			headers: {
+				Cookie: "peloton_session_id=" + instance.peloton_session_id + ";",
+				"peloton-platform": "web"
+			},
+			url: this.peloton_api_url + "api/user/" + instance.peloton_user_id + "/challenges/current",
+			json: true,
+			qs: {
+				has_joined: true
+			}
+		}, function(error, response, body) {
+			self.debug("Received response for /api/user/" + instance.peloton_user_id + "/challenges/current request", instance_identifier);
+
+			if (error) {
+				self.debug(error, instance_identifier);
+
+				self.sendSocketNotification("FAILED_TO_RETRIEVE_CHALLENGE_DATA", {
+					instance_identifier: instance_identifier,
+				});
+			} else if (response.statusCode === 200) {
+				self.debug("Successfully retrieved user challenge data", instance_identifier);
+
+				self.sendSocketNotification("RETRIEVED_CHALLENGE_DATA", {
+					instance_identifier: instance_identifier,
+					body: body
+				});
+			} else {
+				self.debug("Failed to receive data from /api/user/" + instance.peloton_user_id + "/challenges/current", instance_identifier);
+
+				self.sendSocketNotification("FAILED_TO_RETRIEVE_CHALLENGE_DATA", {
 					instance_identifier: instance_identifier,
 					body: body
 				});

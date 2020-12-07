@@ -1,0 +1,43 @@
+{% if sign_in_error %}
+	Failed to login
+{% elseif challenges and challenges|length %}
+	<div class="challenges">
+		<table class="small">
+			<thead>
+				<td class="title">
+					Title
+				</td>
+				<td class="current_tier">
+					Current
+				</td>
+				<td class="next_tier">
+					Next
+				</td>
+			</thead>
+			<tbody>
+				{% for challenge in challenges %}
+					<tr>
+						<td class="title">
+							{{ challenge.challenge_summary.title }}
+							<div class="summary">
+							{{ challenge.challenge_summary.description }}
+							</div>
+						</td>
+						<td class="current_tier">
+							{% if challenge.progress.current_tier.has_reward %}
+								{{ challenge.progress.current_tier.title }}
+							{% else %}
+								Unearned
+							{% endif %}
+						</td>
+						<td class="next_tier">
+							{{ challenge.progress.metric_display_value_to_next_tier }} {{ challenge.progress.metric_display_unit_to_next_tier }} to {{ challenge.progress.next_tier.title }}
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% else %}
+	Loading...
+{% endif %}
