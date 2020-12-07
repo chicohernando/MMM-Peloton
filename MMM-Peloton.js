@@ -1,4 +1,3 @@
-// const Log = require("../../js/logger");
 Module.register("MMM-Peloton", {
 	defaults: {
 		//timers
