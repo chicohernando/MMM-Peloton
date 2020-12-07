@@ -71,7 +71,26 @@ module.exports = NodeHelper.create({
 		return this.getInstance(instance_identifier).config;
 	},
 
-	debug: function(stringToLog, instance_identifier = null) {
+	/**
+	 * Wrapper for Log.log function.  This will use Log.log if the debug
+	 * confirguration is true.  This will prefix the name of the module
+	 * and the instance identifier to the string_to_log.
+	 *
+	 * This expects string_to_log to be a string.  If you have an object
+	 * that you want to log you should try something like:
+	 *
+	 *     this.debug(JSON.stringify(object, null, 2));
+	 *
+	 * instance_identifier is used to determine if the instance has been
+	 * configured for debugging.  If instance_identifier is not passed in
+	 * then the default is to log the data.
+	 *
+	 * @param string string_to_log
+	 * @param string|null instance_identifier
+	 *
+	 * @return void
+	 */
+	debug: function(string_to_log, instance_identifier = null) {
 		let should_log = instance_identifier === null || this.getConfiguration(instance_identifier).debug === true;
 		let prefix = "";
 
@@ -82,7 +101,7 @@ module.exports = NodeHelper.create({
 				prefix = "[" + this.name + "] ";
 			}
 
-			Log.log(prefix + stringToLog);
+			Log.log(prefix + string_to_log);
 		}
 	},
 
