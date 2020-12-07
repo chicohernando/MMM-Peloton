@@ -400,7 +400,7 @@ Module.register("MMM-Peloton", {
 				break;
 			default:
 				this.debug("Invalid workout_count_sort_order.  Applying default sort order.");
-				
+
 				workout_counts_to_return.sort(function(left, right) {
 					return left.name == right.name ? 0 : left.name > right.name ? 1 : -1;
 				});
@@ -409,6 +409,11 @@ Module.register("MMM-Peloton", {
 		return workout_counts_to_return;
 	},
 
+	/**
+	 * Helper function to add filters to our Nunjucks templates.
+	 *
+	 * @return void
+	 */
 	addTemplateFilters: function() {
 		this.nunjucksEnvironment().addFilter(
 			"timeSinceNow",
