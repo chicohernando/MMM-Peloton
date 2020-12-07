@@ -250,6 +250,13 @@ Module.register("MMM-Peloton", {
 		}
 	},
 
+	/**
+	 * Helper function to set the sign_in_error member variable.
+	 *
+	 * @param boolean sign_in_error
+	 *
+	 * @return void
+	 */
 	setSignInError: function(sign_in_error) {
 		this.sign_in_error = !!sign_in_error;
 	},
