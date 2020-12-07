@@ -237,6 +237,14 @@ Module.register("MMM-Peloton", {
 		return this.name + "_" + notification;
 	},
 
+	/**
+	 * Wrapper function to kick off the appropriate backend requests.
+	 *
+	 * This uses the display_type configuration to determine which
+	 * requests should be kicked off.
+	 *
+	 * @return void
+	 */
 	refreshData: function() {
 		//get new user data every time
 		this.requestUserData();
