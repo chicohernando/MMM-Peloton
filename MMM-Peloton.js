@@ -60,6 +60,33 @@ Module.register("MMM-Peloton", {
 	},
 
 	/**
+	 * Returns the name of the template that this widget should load.
+	 *
+	 * Be default it will load a template with the same name as the
+	 * display_type config.  If a display_type is set that does not
+	 * match a template file then undefined_display_type.njk will be
+	 * returned to allow the front end to represent the misconfiguration.
+	 *
+	 * @return string
+	 */
+	getTemplate: function () {
+		let template_name = null;
+
+		switch (this.config.display_type) {
+			case "workout_count":
+			case "recent_workouts":
+			case "challenges":
+				template_name = this.config.display_type + ".njk";
+				break;
+			default:
+				template_name = "undefined_display_type.njk";
+				break;
+		}
+
+		return template_name;
+	},
+
+	/**
 	 * Kicks off a request to get user data.
 	 *
 	 * This function only knows how to let the backend know
@@ -165,23 +192,6 @@ Module.register("MMM-Peloton", {
 		}
 
 		return challenges;
-	},
-
-	getTemplate: function () {
-		let template_name = null;
-
-		switch (this.config.display_type) {
-			case "workout_count":
-			case "recent_workouts":
-			case "challenges":
-				template_name = this.config.display_type + ".njk";
-				break;
-			default:
-				template_name = "undefined_display_type.njk";
-				break;
-		}
-
-		return template_name;
 	},
 
 	getTemplateData: function () {
