@@ -229,6 +229,8 @@ Module.register("MMM-Peloton", {
 	 * that we do not have to worry about naming collisions with other
 	 * modules.
 	 *
+	 * @param string notification
+	 *
 	 * @return string
 	 */
 	normalizeNotification: function(notification) {
