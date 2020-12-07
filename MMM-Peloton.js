@@ -87,6 +87,35 @@ Module.register("MMM-Peloton", {
 	},
 
 	/**
+	 * Sets the data to be used by our template.
+	 *
+	 * This will set the minimum amount of data necessary for
+	 * the template based on the display_type that is configured.
+	 *
+	 * @return object
+	 */
+	getTemplateData: function () {
+		let data = {};
+
+		data.peloton_user = this.peloton_user;
+		data.sign_in_error = this.sign_in_error;
+
+		switch (this.config.display_type) {
+			case "workout_count":
+				data.workout_counts = this.getWorkoutCounts();
+				break;
+			case "recent_workouts":
+				data.recent_workouts = this.getRecentWorkouts();
+				break;
+			case "challenges":
+				data.challenges = this.getChallenges();
+				break;
+		}
+		
+		return data;
+	},
+
+	/**
 	 * Kicks off a request to get user data.
 	 *
 	 * This function only knows how to let the backend know
@@ -192,28 +221,6 @@ Module.register("MMM-Peloton", {
 		}
 
 		return challenges;
-	},
-
-	getTemplateData: function () {
-		let data = {};
-
-		data.config = this.config;
-		data.peloton_user = this.peloton_user;
-		data.sign_in_error = this.sign_in_error;
-
-		switch (this.config.display_type) {
-			case "workout_count":
-				data.workout_counts = this.getWorkoutCounts();
-				break;
-			case "recent_workouts":
-				data.recent_workouts = this.getRecentWorkouts();
-				break;
-			case "challenges":
-				data.challenges = this.getChallenges();
-				break;
-		}
-		
-		return data;
 	},
 
 	normalizeNotification: function(notification) {
