@@ -39,9 +39,25 @@ Module.register("MMM-Peloton", {
 		});
     },
 
+	/**
+	 * Returns an array of the css files that should be included
+	 * for the Peloton widgets.
+	 *
+	 * @return array
+	 */
     getStyles: function() {
     	return ["font-awesome.css", "MMM-Peloton.css"];
     },
+
+	/**
+	 * Returns an array of the js files that should be included
+	 * for the Peloton widgets.
+	 *
+	 * @return array
+	 */
+    getScripts: function () {
+		return ["moment.js"];
+	},
 
 	requestUserData: function() {
 		this.debug("Requesting user data");
@@ -95,11 +111,7 @@ Module.register("MMM-Peloton", {
 		return challenges;
 	},
 
-	getScripts: function () {
-		return ["moment.js"];
-	},
-
-    getTemplate: function () {
+	getTemplate: function () {
 		let template_name = null;
 
 		switch (this.config.display_type) {
