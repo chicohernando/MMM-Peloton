@@ -10,6 +10,19 @@ module.exports = NodeHelper.create({
 		this.peloton_api_url = "https://api.onepeloton.com/";
 	},
 
+	/**
+	 * This node_helper keeps track of data per instance that
+	 * is loaded on the front end.  It does so by keeping track
+	 * of instance data.  This function will create a new instance
+	 * keyed by the front end instance_identifier.  It will store
+	 * the instance config as part of this instance data along with
+	 * other instance specific data accumulated via API calls.
+	 *
+	 * @param string instance_identifier
+	 * @param object config
+	 *
+	 * @return void
+	 */
 	createInstance: function(instance_identifier, config) {
 		let instance = {};
 		
