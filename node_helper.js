@@ -119,6 +119,16 @@ module.exports = NodeHelper.create({
 		return this.name + "_" + notification;
 	},
 
+	/**
+	 * This function captures requests from the front end and determines
+	 * if the request was meant for this node_helper.  If it is then this
+	 * will dispatch the appropriate calls.
+	 *
+	 * @param string notification
+	 * @param object payload
+	 *
+	 * @return void
+	 */
 	socketNotificationReceived: function(notification, payload) {
 		this.debug("Received socket notification: " + notification);
 
