@@ -336,6 +336,21 @@ Module.register("MMM-Peloton", {
 		}
 	},
 
+	/**
+	 * This will transform the raw Peloton API data for
+	 * workouts and will return the transformed data
+	 * as an array.
+	 *
+	 * This will return an empty array if the raw data
+	 * hasn't been fetched.
+	 *
+	 * This will use configuration to determine:
+	 *    - How many workouts to display?
+	 *    - What order to display the workouts in?
+	 *    - What workouts should be omitted from displaying?
+	 *
+	 * @return array
+	 */
 	getWorkoutCounts: function() {
 		this.debug("Transforming workout counts");
 
@@ -362,7 +377,7 @@ Module.register("MMM-Peloton", {
 		});
 
 		//sort workouts based on configuration
-		switch (self.config.workout_count_sort_order) {
+		switch (this.config.workout_count_sort_order) {
 			case "alpha_asc":
 				workout_counts_to_return.sort(function(left, right) {
 					return left.name == right.name ? 0 : left.name > right.name ? 1 : -1;
@@ -385,6 +400,7 @@ Module.register("MMM-Peloton", {
 				break;
 			default:
 				this.debug("Invalid workout_count_sort_order.  Applying default sort order.");
+				
 				workout_counts_to_return.sort(function(left, right) {
 					return left.name == right.name ? 0 : left.name > right.name ? 1 : -1;
 				});
