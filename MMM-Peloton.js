@@ -223,6 +223,14 @@ Module.register("MMM-Peloton", {
 		return challenges;
 	},
 
+	/**
+	 * This function will make it so that the socket notification names
+	 * are guaranteed to be unique for our module.  This makes it so
+	 * that we do not have to worry about naming collisions with other
+	 * modules.
+	 *
+	 * @return string
+	 */
 	normalizeNotification: function(notification) {
 		return this.name + "_" + notification;
 	},
