@@ -151,6 +151,18 @@ module.exports = NodeHelper.create({
 		}
 	},
 
+	/**
+	 * This will attempt to log in via the Peloton API with the credentials
+	 * from the module config.
+	 *
+	 * This function doesn't return anything, however, depending on the API
+	 * response it will send an appropriate socket notification to the front
+	 * end.
+	 *
+	 * @param string istance_identifier
+	 *
+	 * @return void
+	 */
 	login: function(instance_identifier) {
 		let self = this;
 		let instance = this.getInstance(instance_identifier);
