@@ -145,6 +145,16 @@ Module.register("MMM-Peloton", {
 		return recent_workouts;
 	},
 
+	/**
+	 * This will transform the raw Peloton API data for
+	 * challenges and will return the transformed data
+	 * as an array.
+	 *
+	 * This will return an empty array if the raw data
+	 * hasn't been fetched.
+	 *
+	 * @return array
+	 */
 	getChallenges: function() {
 		this.debug("Transforming challenges");
 
