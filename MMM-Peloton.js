@@ -29,6 +29,10 @@ Module.register("MMM-Peloton", {
 			this.config.recent_workouts_limit = 5;
 		}
 
+		if (this.config.refresh_every < 60 || this.config.refresh_every > 86400) {
+			this.config.refresh_every = 300;
+		}
+
 		this.addTemplateFilters();
 		this.sendSocketNotification(this.normalizeNotification("SET_CONFIG"), {
 			instance_identifier: this.identifier,
