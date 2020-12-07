@@ -105,6 +105,16 @@ module.exports = NodeHelper.create({
 		}
 	},
 
+	/**
+	 * This function will make it so that the socket notification names
+	 * are guaranteed to be unique for our module.  This makes it so
+	 * that we do not have to worry about naming collisions with other
+	 * modules.
+	 *
+	 * @param string notification
+	 *
+	 * @return string
+	 */
 	normalizeNotification: function(notification) {
 		return this.name + "_" + notification;
 	},
