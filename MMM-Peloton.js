@@ -97,6 +97,17 @@ Module.register("MMM-Peloton", {
 		});
 	},
 
+	/**
+	 * Kicks off a request to get challenges for the user.
+	 *
+	 * This function only knows how to let the backend know
+	 * to kick off a request to the Peloton API.  Therefore,
+	 * this function doesn't return anything and we have to
+	 * rely on socketNotificationReceived to capture the
+	 * workouts for the user.
+	 *
+	 * @return void
+	 */
 	requestChallenges: function() {
 		this.debug("Requesting challenges");
 
