@@ -46,6 +46,15 @@ module.exports = NodeHelper.create({
 		return this.instances[instance_identifier];
 	},
 
+	/**
+	 * Helper function to relate the instance object to the instance
+	 * identified by instance_identifier.
+	 *
+	 * @param string instance_identifier
+	 * @param object instance
+	 *
+	 * @return void
+	 */
 	setInstance: function(instance_identifier, instance) {
 		this.instances[instance_identifier] = instance;
 	},
