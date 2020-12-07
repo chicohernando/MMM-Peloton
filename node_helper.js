@@ -221,6 +221,17 @@ module.exports = NodeHelper.create({
 		}
 	},
 
+	/**
+	 * This will attempt to retrieve user data via the Peloton API.
+	 *
+	 * This function doesn't return anything, however, depending on the API
+	 * response it will send an appropriate socket notification to the front
+	 * end.
+	 *
+	 * @param string istance_identifier
+	 *
+	 * @return void
+	 */
 	getUserData: function(instance_identifier) {
 		let self = this;
 		let instance = this.getInstance(instance_identifier);
