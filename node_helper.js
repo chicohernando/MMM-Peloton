@@ -59,6 +59,14 @@ module.exports = NodeHelper.create({
 		this.instances[instance_identifier] = instance;
 	},
 
+	/**
+	 * Helper function to get the config data from the instance
+	 * identified by instance_identifier.
+	 *
+	 * @param string instance_identifier
+	 *
+	 * @return object
+	 */
 	getConfiguration: function(instance_identifier) {
 		return this.getInstance(instance_identifier).config;
 	},
