@@ -59,6 +59,17 @@ Module.register("MMM-Peloton", {
 		return ["moment.js"];
 	},
 
+	/**
+	 * Kicks off a request to get user data.
+	 *
+	 * This function only knows how to let the backend know
+	 * to kick off a request to the Peloton API.  Therefore,
+	 * this function doesn't return anything and we have to
+	 * rely on socketNotificationReceived to capture the
+	 * data about the user.
+	 *
+	 * @return void
+	 */
 	requestUserData: function() {
 		this.debug("Requesting user data");
 
