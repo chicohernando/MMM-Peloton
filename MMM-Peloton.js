@@ -271,8 +271,17 @@ Module.register("MMM-Peloton", {
 		this.sign_in_error = !!sign_in_error;
 	},
 
+	/**
+	 * Handles notifications received from the node_helper.
+	 *
+	 * @param string notification
+	 * @param object payload
+	 *
+	 * @return void
+	 */
 	socketNotificationReceived: function (notification, payload) {
 		let self = this;
+
 		if (payload.instance_identifier == this.identifier) {
 			if (notification === "USER_IS_LOGGED_IN") {
 				this.debug("Front end knows that user is logged in");
@@ -290,14 +299,17 @@ Module.register("MMM-Peloton", {
 				this.updateDom();
 			} else if (notification === "RETRIEVED_USER_DATA") {
 				this.debug("Front end knows that user data was retrieved");
+
 				this.peloton_user = payload.peloton_user;
 				this.updateDom();
 			} else if (notification === "RETRIEVED_RECENT_WORKOUT_DATA") {
 				this.debug("Front end retrieved recent workout data");
+
 				this.peloton_recent_workouts = payload.body;
 				this.updateDom();
 			} else if (notification === "RETRIEVED_CHALLENGE_DATA") {
 				this.debug("Front end retrieved challenge data");
+				
 				this.peloton_challenges = payload.body;
 				this.updateDom();
 			}
