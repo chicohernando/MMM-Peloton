@@ -2,6 +2,13 @@
 
 This is a MagicMirror module for people with a Peloton account.  This module will show you your Peloton information to help keep you motivated to achieve your goals, whatever they may be.
 
+# Screenshots
+|Display Type|Screenshot|
+|------------|----------|
+|Workout Count|![Screeenshot of Workout Count Summary](screenshots/workout-count-summary.png)|
+|Recent Workouts|![Screeenshot of Recent Workouts](screenshots/recent-workouts.png)|
+|Challenges|![Screeenshot of Challenges](screenshots/challenges.png)|
+
 # Prerequisites
 * You should have an active Peloton account.  If you do not have an account you can [use this link](https://account.onepeloton.com/referrals/share?code=M2F9M7) to get an account.
 
