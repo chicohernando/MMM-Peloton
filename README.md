@@ -16,6 +16,17 @@ This is a MagicMirror module for people with a Peloton account.  This module wil
    git clone https://github.com/chicohernando/MMM-Peloton.git
    ```
 1. Configure this module in your MagicMirror config/config.js file
+   ```js
+   {
+     module: "MMM-Peloton",
+     position: "top_left",
+     header: "My Peloton Workouts",
+     config: {
+       username: "username",
+       password: "password",
+     }
+   },
+   ```
 
 # Configuration
 
@@ -50,3 +61,67 @@ This configuration option is available when your `display_type` is set to `recen
 |Name|Type|Description|Default|Options|
 |----|----|-----------|-------|-------|
 |`recent_workouts_limit`|int|Controls how many workouts to display|`5`|Numbers between the values of `1` and `10`|
+
+# Example Configurations
+
+You may configure this module more than once.  Each configuration needs to redefine the username and password.  This allows multiple people to have their own data displayed at the same time.
+
+1. One user that only wants to show their workout counts by category.  They do *not* want to see counts for the Yoga category nor categories where the count is zero.  They would like to see the workouts ordered by count descending.
+   ```js
+   {
+     module: "MMM-Peloton",
+     position: "top_left",
+     header: "My Peloton Workouts",
+     config: {
+       username: "my_username",
+       password: "my_password",
+       display_type: "workout_count",
+       workout_count_categories_to_omit: ["yoga"],
+       workout_count_should_display_categories_with_zero_count: false,
+       workout_count_sort_order: "count_desc",
+     }
+   },
+   ```
+1. Two users that both want to show their Recent Workouts and Current Challenges.  "My" user is on the left and "Your" user is on the right.
+   ```js
+   {
+     module: "MMM-Peloton",
+     position: "top_left",
+     header: "My Peloton Challenges",
+     config: {
+       username: "my_username",
+       password: "my_password",
+       display_type: "challenges",
+     }
+   },
+   {
+     module: "MMM-Peloton",
+     position: "bottom_left",
+     header: "My Peloton Recent Workouts",
+     config: {
+       username: "my_username",
+       password: "my_password",
+       display_type: "recent_workouts",
+     }
+   },
+   {
+     module: "MMM-Peloton",
+     position: "top_right",
+     header: "Your Peloton Challenges",
+     config: {
+       username: "your_username",
+       password: "your_password",
+       display_type: "challenges",
+     }
+   },
+   {
+     module: "MMM-Peloton",
+     position: "bottom_right",
+     header: "Your Peloton Recent Workouts",
+     config: {
+       username: "your_username",
+       password: "your_password",
+       display_type: "recent_workouts",
+     }
+   },
+   ```
