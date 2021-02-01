@@ -4,7 +4,7 @@ const Log = require("../../js/logger");
 
 module.exports = NodeHelper.create({
 	start: function () {
-		Log.log("Starting node helper for: " + this.name);
+		this.debug("Starting node helper for: " + this.name);
 
 		this.instances = [];
 		this.peloton_api_url = "https://api.onepeloton.com/";
@@ -101,7 +101,11 @@ module.exports = NodeHelper.create({
 				prefix = "[" + this.name + "] ";
 			}
 
-			Log.log(prefix + string_to_log);
+			if (typeof Log !== "undefined" && typeof Log.log === "function") {
+				Log.log(prefix + string_to_log);
+			} else {
+				console.log(prefix + string_to_log);
+			}
 		}
 	},
 
@@ -167,7 +171,7 @@ module.exports = NodeHelper.create({
 		let self = this;
 		let instance = this.getInstance(instance_identifier);
 
-		this.debug("Logging in as: " + instance.config.username);
+		this.debug("Logging in as: " + instance.config.username, instance_identifier);
 		
 		if (instance.peloton_session_id) {
 			this.debug("Already logged in", instance_identifier);
