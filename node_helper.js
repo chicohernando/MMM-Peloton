@@ -186,9 +186,11 @@ module.exports = NodeHelper.create({
 			instance.peloton_user = null;
 
 			this.setInstance(instance_identifier, instance);
-
 			request({
 				url: this.peloton_api_url + "auth/login",
+				headers: {
+					"User-Agent": "curl/7.64.0"
+				},
 				method: "POST",
 				json: true,
 				body: {
